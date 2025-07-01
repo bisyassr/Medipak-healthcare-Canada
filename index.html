@@ -1,0 +1,726 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Investment Opportunity: Autoclave Manufacturing in Ontario</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Chosen Palette: Calm Corporate Blue -->
+    <!-- Application Structure Plan: A single-page dashboard with a sticky top navigation for seamless scrolling between thematic sections. The structure prioritizes a logical investment narrative: 1. Opportunity (Market), 2. Location (Why Ontario?), 3. Strategy (Product/Market), 4. Competitors (New Section), 5. Regulatory, 6. Export, 7. Funding, and 8. Recommendations. Adding a dedicated, interactive 'Competitors' section after 'Strategy' allows for a direct comparison against the proposed plan, enhancing strategic context before diving into operational details like regulations and funding. -->
+    <!-- Visualization & Content Choices: 
+        - Report Info: Competitor List -> Goal: Compare/Organize -> Viz: Interactive Tabbed Cards (HTML/CSS/JS) -> Interaction: Click to switch views (Global vs. Canadian) -> Justification: Manages a long list of competitors cleanly, allowing users to focus on specific segments of the competitive landscape without overwhelming the layout.
+        - Report Info: Market Growth/Trade Gap -> Goal: Show change/compare -> Viz: Bar/Line Charts (Chart.js) -> Interaction: Hover tooltips -> Justification: Clearly visualizes market trends.
+        - Report Info: Market Segments -> Goal: Show proportions -> Viz: Donut Chart (Chart.js) -> Interaction: Hover tooltips -> Justification: Highlights strategic focus.
+        - Report Info: Funding Programs -> Goal: Organize -> Viz: Accordion List (HTML/JS) -> Interaction: Click to expand -> Justification: Manages information density.
+    -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #F5F5F4; /* Warm Neutral: Stone 100 */
+            color: #4B5563; /* Gray 600 */
+        }
+        .nav-link {
+            transition: color 0.3s ease, border-bottom-color 0.3s ease;
+            border-bottom: 2px solid transparent;
+        }
+        .nav-link:hover, .nav-link.active {
+            color: #2563EB; /* Blue 600 */
+            border-bottom-color: #2563EB;
+        }
+        .stat-card, .competitor-card {
+            background-color: white;
+            border-radius: 0.75rem;
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .stat-card:hover, .competitor-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -2px rgb(0 0 0 / 0.1);
+        }
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 300px;
+            max-height: 400px;
+        }
+        @media (min-width: 768px) {
+            .chart-container {
+                height: 350px;
+            }
+        }
+        .section-title {
+            color: #111827; /* Gray 900 */
+            font-weight: 700;
+        }
+        .accordion-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.5s ease-out;
+        }
+        .tab.active {
+            border-color: #2563EB;
+            color: #2563EB;
+            background-color: #EFF6FF; /* Blue 50 */
+        }
+    </style>
+</head>
+<body class="antialiased">
+
+    <!-- Header & Navigation -->
+    <header id="header" class="bg-white/80 backdrop-blur-md sticky top-0 z-50 shadow-sm">
+        <nav class="container mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                <div class="flex items-center">
+                    <span class="font-bold text-xl text-gray-800">Autoclave Opportunity</span>
+                </div>
+                <div class="hidden md:block">
+                    <div id="nav-menu" class="ml-10 flex items-baseline space-x-4">
+                        <a href="#opportunity" class="nav-link px-3 py-2 rounded-md text-sm font-medium text-gray-700">The Opportunity</a>
+                        <a href="#location" class="nav-link px-3 py-2 rounded-md text-sm font-medium text-gray-700">Why Ontario?</a>
+                        <a href="#strategy" class="nav-link px-3 py-2 rounded-md text-sm font-medium text-gray-700">Strategy</a>
+                        <a href="#competitors" class="nav-link px-3 py-2 rounded-md text-sm font-medium text-gray-700">Competitors</a>
+                        <a href="#regulatory" class="nav-link px-3 py-2 rounded-md text-sm font-medium text-gray-700">Regulatory</a>
+                        <a href="#export" class="nav-link px-3 py-2 rounded-md text-sm font-medium text-gray-700">Export</a>
+                        <a href="#funding" class="nav-link px-3 py-2 rounded-md text-sm font-medium text-gray-700">Funding</a>
+                        <a href="#recommendations" class="nav-link px-3 py-2 rounded-md text-sm font-medium text-gray-700">Recommendations</a>
+                    </div>
+                </div>
+                <div class="md:hidden">
+                    <button id="mobile-menu-button" class="inline-flex items-center justify-center p-2 rounded-md text-gray-600 hover:text-gray-800 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-blue-500">
+                        <span class="sr-only">Open main menu</span>
+                        <div id="hamburger-icon" class="block h-6 w-6">
+                            <span class="block w-full h-0.5 bg-current transform transition duration-500 ease-in-out"></span>
+                            <span class="block w-full h-0.5 bg-current mt-1.5 transform transition duration-500 ease-in-out"></span>
+                            <span class="block w-full h-0.5 bg-current mt-1.5 transform transition duration-500 ease-in-out"></span>
+                        </div>
+                    </button>
+                </div>
+            </div>
+            <div id="mobile-menu" class="md:hidden hidden pb-3">
+                <a href="#opportunity" class="block nav-link px-3 py-2 rounded-md text-base font-medium text-gray-700">The Opportunity</a>
+                <a href="#location" class="block nav-link px-3 py-2 rounded-md text-base font-medium text-gray-700">Why Ontario?</a>
+                <a href="#strategy" class="block nav-link px-3 py-2 rounded-md text-base font-medium text-gray-700">Strategy</a>
+                <a href="#competitors" class="block nav-link px-3 py-2 rounded-md text-base font-medium text-gray-700">Competitors</a>
+                <a href="#regulatory" class="block nav-link px-3 py-2 rounded-md text-base font-medium text-gray-700">Regulatory</a>
+                <a href="#export" class="block nav-link px-3 py-2 rounded-md text-base font-medium text-gray-700">Export</a>
+                <a href="#funding" class="block nav-link px-3 py-2 rounded-md text-base font-medium text-gray-700">Funding</a>
+                <a href="#recommendations" class="block nav-link px-3 py-2 rounded-md text-base font-medium text-gray-700">Recommendations</a>
+            </div>
+        </nav>
+    </header>
+
+    <main>
+        <!-- Hero Section -->
+        <section class="bg-white py-20 sm:py-24">
+            <div class="container mx-auto px-4 sm:px-6 lg:px-8 text-center">
+                <h1 class="text-4xl md:text-5xl font-extrabold tracking-tight text-gray-900">A Strategic Investment in Canadian Healthcare</h1>
+                <p class="mt-6 max-w-3xl mx-auto text-lg md:text-xl text-gray-600">Establishing autoclave manufacturing in Ontario to meet growing domestic demand, close the import gap, and capitalize on significant global export potential.</p>
+                <div class="mt-10">
+                    <a href="#opportunity" class="inline-block bg-blue-600 text-white font-semibold px-8 py-3 rounded-lg shadow-md hover:bg-blue-700 transition-colors">Explore the Opportunity</a>
+                </div>
+            </div>
+        </section>
+
+        <!-- The Opportunity Section -->
+        <section id="opportunity" class="py-16 sm:py-20">
+            <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="text-center mb-12">
+                    <h2 class="text-3xl section-title tracking-tight">The Market Landscape</h2>
+                    <p class="mt-4 max-w-2xl mx-auto text-lg text-gray-600">Canada's medical device market presents a compelling case for domestic manufacturing, driven by strong growth, an aging population, and a critical reliance on imports.</p>
+                </div>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-12">
+                    <div class="stat-card p-6 text-center">
+                        <div class="text-4xl font-bold text-blue-600" id="market-size-stat"></div>
+                        <p class="mt-2 text-gray-700 font-medium">Canadian Med-Device Market (2022)</p>
+                    </div>
+                    <div class="stat-card p-6 text-center">
+                        <div class="text-4xl font-bold text-blue-600" id="autoclave-growth-stat"></div>
+                        <p class="mt-2 text-gray-700 font-medium">Canadian Autoclave Market CAGR (to 2030)</p>
+                    </div>
+                     <div class="stat-card p-6 text-center">
+                        <div class="text-4xl font-bold text-blue-600" id="import-dependency-stat"></div>
+                        <p class="mt-2 text-gray-700 font-medium">Domestic Demand Met by Imports</p>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12">
+                    <div class="bg-white p-6 rounded-lg shadow-md">
+                        <h3 class="text-xl font-semibold text-gray-800 mb-4">Canada's Growing Med-Device Trade Gap (2017 vs 2022)</h3>
+                        <p class="text-gray-600 mb-4 text-sm">The widening gap between imports and exports highlights a significant opportunity for domestic producers to enhance supply chain security and reduce reliance on foreign markets.</p>
+                        <div class="chart-container">
+                            <canvas id="tradeGapChart"></canvas>
+                        </div>
+                    </div>
+                    <div class="bg-white p-6 rounded-lg shadow-md">
+                         <h3 class="text-xl font-semibold text-gray-800 mb-4">Canadian Autoclave Market Growth (2024-2030)</h3>
+                         <p class="text-gray-600 mb-4 text-sm">The domestic market for steam autoclaves is projected to more than double by 2030, demonstrating robust and sustained demand.</p>
+                        <div class="chart-container">
+                            <canvas id="autoclaveMarketChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Why Ontario Section -->
+        <section id="location" class="py-16 sm:py-20 bg-white">
+            <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="text-center mb-12">
+                    <h2 class="text-3xl section-title tracking-tight">The Location Advantage: Why Ontario?</h2>
+                    <p class="mt-4 max-w-2xl mx-auto text-lg text-gray-600">Ontario offers an unparalleled ecosystem for advanced manufacturing, combining a deep talent pool, a supportive government, and a world-class life sciences sector.</p>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12 text-center">
+                    <div class="p-6">
+                        <div class="flex items-center justify-center h-16 w-16 rounded-full bg-blue-100 mx-auto mb-4">
+                            <span class="text-3xl">⚙️</span>
+                        </div>
+                        <h3 class="text-xl font-semibold text-gray-800">Advanced Manufacturing Hub</h3>
+                        <p class="mt-2 text-gray-600">Home to 20,000+ firms and 800,000+ workers, providing a rich supply chain and expertise.</p>
+                    </div>
+                    <div class="p-6">
+                        <div class="flex items-center justify-center h-16 w-16 rounded-full bg-blue-100 mx-auto mb-4">
+                             <span class="text-3xl">🔬</span>
+                        </div>
+                        <h3 class="text-xl font-semibold text-gray-800">Life Sciences Leader</h3>
+                        <p class="mt-2 text-gray-600">Canada's largest life sciences cluster, with ~2,000 firms and 72,800 employees.</p>
+                    </div>
+                    <div class="p-6">
+                       <div class="flex items-center justify-center h-16 w-16 rounded-full bg-blue-100 mx-auto mb-4">
+                             <span class="text-3xl">💻</span>
+                        </div>
+                        <h3 class="text-xl font-semibold text-gray-800">Deep Tech Talent</h3>
+                        <p class="mt-2 text-gray-600">North America's 2nd largest tech cluster, producing 70,000 STEM graduates annually.</p>
+                    </div>
+                </div>
+                <div class="bg-blue-50 p-8 rounded-lg">
+                    <h3 class="text-2xl font-bold text-center text-gray-900 mb-6">Your Partner for Success: Invest Ontario</h3>
+                    <p class="text-center text-gray-700 mb-8 max-w-3xl mx-auto">Invest Ontario provides end-to-end support, simplifying the investment journey by connecting businesses with funding, site selection, market intelligence, and priority access to government services.</p>
+                    <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-6 text-center">
+                        <div class="flex flex-col items-center"><div class="rounded-full bg-white h-12 w-12 flex items-center justify-center shadow-md mb-2">🤝</div><span class="font-medium text-sm">Partnerships</span></div>
+                        <div class="flex flex-col items-center"><div class="rounded-full bg-white h-12 w-12 flex items-center justify-center shadow-md mb-2">🏢</div><span class="font-medium text-sm">Site Selection</span></div>
+                        <div class="flex flex-col items-center"><div class="rounded-full bg-white h-12 w-12 flex items-center justify-center shadow-md mb-2">📈</div><span class="font-medium text-sm">Market Intel</span></div>
+                        <div class="flex flex-col items-center"><div class="rounded-full bg-white h-12 w-12 flex items-center justify-center shadow-md mb-2">💰</div><span class="font-medium text-sm">Financing</span></div>
+                        <div class="flex flex-col items-center"><div class="rounded-full bg-white h-12 w-12 flex items-center justify-center shadow-md mb-2">📜</div><span class="font-medium text-sm">Gov't Access</span></div>
+                        <div class="flex flex-col items-center"><div class="rounded-full bg-white h-12 w-12 flex items-center justify-center shadow-md mb-2">👥</div><span class="font-medium text-sm">Labor Force</span></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Strategy Section -->
+        <section id="strategy" class="py-16 sm:py-20">
+            <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="text-center mb-12">
+                    <h2 class="text-3xl section-title tracking-tight">The Plan: Product & Go-to-Market Strategy</h2>
+                    <p class="mt-4 max-w-2xl mx-auto text-lg text-gray-600">A focused strategy targeting high-growth product segments and leveraging unique procurement channels is key to successful market entry.</p>
+                </div>
+                 <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12">
+                    <div class="bg-white p-6 rounded-lg shadow-md flex flex-col">
+                        <h3 class="text-xl font-semibold text-gray-800 mb-4">Strategic Product Focus: Autoclave Segments</h3>
+                        <p class="text-gray-600 mb-4 text-sm flex-grow">While vertical units lead in current revenue, table-top models represent the fastest-growing and most lucrative segment, ideal for clinics, dental offices, and labs. This is the prime entry point.</p>
+                        <div class="chart-container mt-auto">
+                            <canvas id="productSegmentChart"></canvas>
+                        </div>
+                    </div>
+                    <div class="bg-white p-6 rounded-lg shadow-md">
+                        <h3 class="text-xl font-semibold text-gray-800 mb-4">Go-to-Market Pathway</h3>
+                         <p class="text-gray-600 mb-6 text-sm">Initial success will be built by targeting the flexible "local/innovative" segment of healthcare procurement, establishing a track record before competing for larger GPO contracts.</p>
+                        <div class="space-y-4">
+                            <div class="flex items-start">
+                                <div class="flex-shrink-0 w-8 h-8 rounded-full bg-blue-600 text-white flex items-center justify-center font-bold">1</div>
+                                <div class="ml-4">
+                                    <h4 class="font-semibold text-gray-800">Develop "Smart" Table-Top Autoclaves</h4>
+                                    <p class="text-gray-600 text-sm">Focus on high-growth segment with advanced features for compliance and efficiency.</p>
+                                </div>
+                            </div>
+                            <div class="flex items-start">
+                                <div class="flex-shrink-0 w-8 h-8 rounded-full bg-blue-600 text-white flex items-center justify-center font-bold">2</div>
+                                <div class="ml-4">
+                                    <h4 class="font-semibold text-gray-800">Leverage "Ontario Made" Brand</h4>
+                                    <p class="text-gray-600 text-sm">Build brand equity and align with provincial economic goals.</p>
+                                </div>
+                            </div>
+                            <div class="flex items-start">
+                                <div class="flex-shrink-0 w-8 h-8 rounded-full bg-blue-600 text-white flex items-center justify-center font-bold">3</div>
+                                <div class="ml-4">
+                                    <h4 class="font-semibold text-gray-800">Target 20% "Innovation" Procurement</h4>
+                                    <p class="text-gray-600 text-sm">Engage directly with hospitals, clinics, and labs in the flexible GPO segment.</p>
+                                </div>
+                            </div>
+                            <div class="flex items-start">
+                                <div class="flex-shrink-0 w-8 h-8 rounded-full bg-blue-600 text-white flex items-center justify-center font-bold">4</div>
+                                <div class="ml-4">
+                                    <h4 class="font-semibold text-gray-800">Build Track Record & Scale</h4>
+                                    <p class="text-gray-600 text-sm">Use initial success to build reputation and compete for larger, long-term contracts.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Competitors Section -->
+        <section id="competitors" class="py-16 sm:py-20 bg-white">
+            <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="text-center mb-12">
+                    <h2 class="text-3xl section-title tracking-tight">The Competitive Landscape</h2>
+                    <p class="mt-4 max-w-2xl mx-auto text-lg text-gray-600">The market is dominated by established global players, but a strategic opening exists for a domestic manufacturer focused on service, innovation, and the "Made in Canada" advantage.</p>
+                </div>
+                <div class="flex flex-wrap justify-center -mb-px" id="competitor-tabs-container">
+                    <button class="tab active text-sm font-medium py-3 px-5 border-b-2" data-target="global">Global Giants</button>
+                    <button class="tab text-sm font-medium py-3 px-5 border-b-2" data-target="canadian">Canadian Specialists</button>
+                </div>
+                <div class="bg-gray-50 rounded-lg shadow-inner mt-0 p-8">
+                    <div id="global" class="competitor-content">
+                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                            <!-- Global competitors will be injected here -->
+                        </div>
+                    </div>
+                    <div id="canadian" class="competitor-content hidden">
+                         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                            <!-- Canadian competitors will be injected here -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+
+        <!-- Regulatory Section -->
+        <section id="regulatory" class="py-16 sm:py-20">
+            <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="text-center mb-12">
+                    <h2 class="text-3xl section-title tracking-tight">The Path: A Clear Regulatory Roadmap</h2>
+                    <p class="mt-4 max-w-2xl mx-auto text-lg text-gray-600">Autoclaves are Class II medical devices, requiring a defined but manageable regulatory process with Health Canada. A robust Quality Management System is foundational.</p>
+                </div>
+                 <div class="max-w-4xl mx-auto">
+                    <div class="relative">
+                        <div class="absolute left-1/2 top-0 bottom-0 w-0.5 bg-gray-200" aria-hidden="true"></div>
+                        <div class="relative p-6 bg-blue-50 border-l-4 border-blue-500 rounded-lg mb-8">
+                            <h4 class="text-lg font-bold text-gray-900">Step 1: Implement Quality Management System (QMS)</h4>
+                            <p class="mt-2 text-gray-700">Establish an <span class="font-semibold">ISO 13485</span> compliant QMS from day one. This is the backbone of all regulatory approvals and demonstrates a commitment to quality and safety.</p>
+                        </div>
+                         <div class="relative p-6 bg-blue-50 border-l-4 border-blue-500 rounded-lg mb-8">
+                            <h4 class="text-lg font-bold text-gray-900">Step 2: Obtain MDSAP Certification</h4>
+                            <p class="mt-2 text-gray-700">Undergo a single audit under the <span class="font-semibold">Medical Device Single Audit Program (MDSAP)</span>. This is mandatory for Class II devices in Canada and streamlines access to other markets like the US, Brazil, Australia, and Japan.</p>
+                        </div>
+                        <div class="relative p-6 bg-blue-50 border-l-4 border-blue-500 rounded-lg mb-8">
+                            <h4 class="text-lg font-bold text-gray-900">Step 3: Secure Health Canada Licenses</h4>
+                            <p class="mt-2 text-gray-700">Apply for two key licenses: a <span class="font-semibold">Medical Device Licence (MDL)</span> for the product itself and a <span class="font-semibold">Medical Device Establishment Licence (MDEL)</span> for the manufacturing facility.</p>
+                        </div>
+                         <div class="relative p-6 bg-green-50 border-l-4 border-green-500 rounded-lg">
+                            <h4 class="text-lg font-bold text-gray-900">Outcome: Market Access Achieved</h4>
+                            <p class="mt-2 text-gray-700">With these steps completed, the company is fully authorized to manufacture and sell autoclaves in the Canadian market and is well-positioned for international export.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Export Section -->
+        <section id="export" class="py-16 sm:py-20 bg-white">
+            <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="text-center mb-12">
+                    <h2 class="text-3xl section-title tracking-tight">The Horizon: Global Export Potential</h2>
+                    <p class="mt-4 max-w-2xl mx-auto text-lg text-gray-600">A "Made in Canada" autoclave, backed by MDSAP certification and free trade agreements, is highly competitive in key international markets.</p>
+                </div>
+                <div class="flex flex-wrap justify-center -mb-px" id="export-tabs-container">
+                    <button class="tab active text-sm font-medium py-3 px-5 border-b-2" data-target="usa">USA</button>
+                    <button class="tab text-sm font-medium py-3 px-5 border-b-2" data-target="eu">European Union</button>
+                    <button class="tab text-sm font-medium py-3 px-5 border-b-2" data-target="apac">Asia-Pacific</button>
+                    <button class="tab text-sm font-medium py-3 px-5 border-b-2" data-target="latam">Latin America</button>
+                </div>
+                <div class="bg-gray-50 rounded-lg shadow-inner mt-0 p-8">
+                    <div id="usa-content" class="export-content">
+                        <h3 class="text-xl font-bold text-gray-800">United States (FDA)</h3>
+                        <p class="mt-2 text-gray-600">As Canada's largest trading partner, the US offers a seamless export pathway. Class II devices typically require a 510(k) premarket notification. MDSAP audit reports are accepted by the FDA, simplifying compliance.</p>
+                    </div>
+                    <div id="eu-content" class="export-content hidden">
+                        <h3 class="text-xl font-bold text-gray-800">European Union (MDR)</h3>
+                        <p class="mt-2 text-gray-600">Access to the 27 EU member states requires compliance with the Medical Devices Regulation (MDR) and obtaining a CE Marking. The CETA free trade agreement eliminates tariffs, enhancing competitiveness.</p>
+                    </div>
+                    <div id="apac-content" class="export-content hidden">
+                        <h3 class="text-xl font-bold text-gray-800">Asia-Pacific (APAC)</h3>
+                        <p class="mt-2 text-gray-600">The fastest-growing global region. Key markets like Japan accept MDSAP reports. The CPTPP trade agreement provides preferential access to countries like Japan, Malaysia, and Vietnam.</p>
+                    </div>
+                    <div id="latam-content" class="export-content hidden">
+                        <h3 class="text-xl font-bold text-gray-800">Latin America</h3>
+                        <p class="mt-2 text-gray-600">A rapidly growing market. Mexico's "Equivalency Route" offers expedited approval for Health Canada-licensed devices, a significant competitive advantage. Brazil also accepts MDSAP reports.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Funding Section -->
+        <section id="funding" class="py-16 sm:py-20">
+            <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="text-center mb-12">
+                    <h2 class="text-3xl section-title tracking-tight">The Fuel: Funding & Incentives</h2>
+                    <p class="mt-4 max-w-2xl mx-auto text-lg text-gray-600">A rich ecosystem of federal and provincial programs is available to support capital investment, R&D, and commercialization for manufacturing startups in Ontario.</p>
+                </div>
+                <div class="max-w-4xl mx-auto space-y-4" id="accordion-container">
+                    <!-- Accordion items will be injected here by JavaScript -->
+                </div>
+            </div>
+        </section>
+
+        <!-- Recommendations Section -->
+        <section id="recommendations" class="py-16 sm:py-20 bg-white">
+            <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="text-center mb-12">
+                    <h2 class="text-3xl section-title tracking-tight">The Blueprint: Key Recommendations</h2>
+                    <p class="mt-4 max-w-2xl mx-auto text-lg text-gray-600">A clear, actionable strategy to capitalize on this timely investment opportunity.</p>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                    <div class="bg-white p-6 rounded-lg shadow-md">
+                        <div class="flex items-center mb-4">
+                            <div class="w-8 h-8 flex-shrink-0 rounded-full bg-blue-100 text-blue-700 flex items-center justify-center font-bold mr-4">1</div>
+                            <h3 class="text-lg font-semibold text-gray-800">Focus on Table-Top & Smart Autoclaves</h3>
+                        </div>
+                        <p class="text-gray-600 text-sm">Target the fastest-growing market segments with products featuring advanced compliance and data-logging capabilities.</p>
+                    </div>
+                    <div class="bg-white p-6 rounded-lg shadow-md">
+                        <div class="flex items-center mb-4">
+                             <div class="w-8 h-8 flex-shrink-0 rounded-full bg-blue-100 text-blue-700 flex items-center justify-center font-bold mr-4">2</div>
+                            <h3 class="text-lg font-semibold text-gray-800">Phased "Made in Canada" Market Entry</h3>
+                        </div>
+                        <p class="text-gray-600 text-sm">Initially target local/innovative procurement channels to build a domestic track record before scaling.</p>
+                    </div>
+                    <div class="bg-white p-6 rounded-lg shadow-md">
+                         <div class="flex items-center mb-4">
+                             <div class="w-8 h-8 flex-shrink-0 rounded-full bg-blue-100 text-blue-700 flex items-center justify-center font-bold mr-4">3</div>
+                            <h3 class="text-lg font-semibold text-gray-800">Embed Quality System from Day One</h3>
+                        </div>
+                        <p class="text-gray-600 text-sm">Implement a robust ISO 13485 QMS from inception to streamline mandatory MDSAP certification and all approvals.</p>
+                    </div>
+                     <div class="bg-white p-6 rounded-lg shadow-md">
+                         <div class="flex items-center mb-4">
+                             <div class="w-8 h-8 flex-shrink-0 rounded-full bg-blue-100 text-blue-700 flex items-center justify-center font-bold mr-4">4</div>
+                            <h3 class="text-lg font-semibold text-gray-800">Engage Proactively with Gov't Support</h3>
+                        </div>
+                        <p class="text-gray-600 text-sm">Leverage Invest Ontario and the extensive federal/provincial funding programs to de-risk and accelerate growth.</p>
+                    </div>
+                     <div class="bg-white p-6 rounded-lg shadow-md">
+                         <div class="flex items-center mb-4">
+                             <div class="w-8 h-8 flex-shrink-0 rounded-full bg-blue-100 text-blue-700 flex items-center justify-center font-bold mr-4">5</div>
+                            <h3 class="text-lg font-semibold text-gray-800">Develop a Strategic Export Plan</h3>
+                        </div>
+                        <p class="text-gray-600 text-sm">Prioritize the US and leverage Health Canada approval for expedited entry into markets like Mexico.</p>
+                    </div>
+                     <div class="bg-white p-6 rounded-lg shadow-md">
+                         <div class="flex items-center mb-4">
+                             <div class="w-8 h-8 flex-shrink-0 rounded-full bg-blue-100 text-blue-700 flex items-center justify-center font-bold mr-4">6</div>
+                            <h3 class="text-lg font-semibold text-gray-800">Build Recurring Revenue via Service</h3>
+                        </div>
+                        <p class="text-gray-600 text-sm">Integrate comprehensive after-sales support, including maintenance contracts, into the business model.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+    
+    <footer class="bg-gray-800 text-white">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8 py-8 text-center">
+            <p>&copy; 2024 Autoclave Manufacturing Investment Analysis. All data sourced from the provided research report.</p>
+            <p class="text-xs text-gray-400 mt-2">This interactive application is for informational purposes only.</p>
+        </div>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            
+            const animateValue = (obj, start, end, duration) => {
+                let startTimestamp = null;
+                const step = (timestamp) => {
+                    if (!startTimestamp) startTimestamp = timestamp;
+                    const progress = Math.min((timestamp - startTimestamp) / duration, 1);
+                    const currentValue = Math.floor(progress * (end - start) + start);
+                    if (obj.id === 'autoclave-growth-stat' || obj.id === 'import-dependency-stat'){
+                         obj.innerHTML = `${currentValue.toLocaleString()}%`;
+                    } else {
+                        obj.innerHTML = `$${(currentValue / 1000).toFixed(1)}B`;
+                    }
+                    if (progress < 1) {
+                        window.requestAnimationFrame(step);
+                    }
+                };
+                window.requestAnimationFrame(step);
+            };
+
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        const marketSizeEl = document.getElementById('market-size-stat');
+                        const autoclaveGrowthEl = document.getElementById('autoclave-growth-stat');
+                        const importDependencyEl = document.getElementById('import-dependency-stat');
+                        
+                        if(marketSizeEl && !marketSizeEl.classList.contains('animated')) {
+                            animateValue(marketSizeEl, 0, 6800, 1500);
+                            marketSizeEl.classList.add('animated');
+                        }
+                         if(autoclaveGrowthEl && !autoclaveGrowthEl.classList.contains('animated')) {
+                            animateValue(autoclaveGrowthEl, 0, 12.6, 1500);
+                            autoclaveGrowthEl.classList.add('animated');
+                        }
+                         if(importDependencyEl && !importDependencyEl.classList.contains('animated')) {
+                            animateValue(importDependencyEl, 0, 70, 1500);
+                            importDependencyEl.classList.add('animated');
+                        }
+                        observer.unobserve(entry.target);
+                    }
+                });
+            }, { threshold: 0.5 });
+            
+            if(document.getElementById('opportunity')) {
+                observer.observe(document.getElementById('opportunity'));
+            }
+            
+            const tradeGapData = {
+                labels: ['Imports', 'Exports'],
+                datasets: [
+                    {
+                        label: '2017',
+                        data: [8.8, 3.8],
+                        backgroundColor: 'rgba(59, 130, 246, 0.5)',
+                        borderColor: 'rgba(59, 130, 246, 1)',
+                        borderWidth: 1
+                    },
+                    {
+                        label: '2022',
+                        data: [13.3, 5.1],
+                        backgroundColor: 'rgba(37, 99, 235, 0.7)',
+                        borderColor: 'rgba(37, 99, 235, 1)',
+                        borderWidth: 1
+                    }
+                ]
+            };
+            const tradeGapCtx = document.getElementById('tradeGapChart').getContext('2d');
+            new Chart(tradeGapCtx, {
+                type: 'bar',
+                data: tradeGapData,
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            title: { display: true, text: 'Billions (CAN$)' }
+                        }
+                    },
+                    plugins: { legend: { position: 'top' } }
+                }
+            });
+
+            const autoclaveMarketData = {
+                labels: ['2024', '2030 (Projected)'],
+                datasets: [{
+                    label: 'Market Revenue (US$ Millions)',
+                    data: [13.5, 27.3],
+                    backgroundColor: ['rgba(59, 130, 246, 0.5)', 'rgba(37, 99, 235, 0.7)'],
+                    borderColor: ['rgba(59, 130, 246, 1)', 'rgba(37, 99, 235, 1)'],
+                    borderWidth: 1
+                }]
+            };
+            const autoclaveMarketCtx = document.getElementById('autoclaveMarketChart').getContext('2d');
+            new Chart(autoclaveMarketCtx, {
+                type: 'bar',
+                data: autoclaveMarketData,
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: { beginAtZero: true, title: { display: true, text: 'Revenue (US$M)' } }
+                    },
+                    plugins: { legend: { display: false } }
+                }
+            });
+
+            const productSegmentData = {
+                labels: ['Table-Top (Fastest Growth)', 'Vertical (Largest Revenue)', 'Other'],
+                datasets: [{
+                    label: 'Autoclave Segments',
+                    data: [35, 45, 20],
+                    backgroundColor: [
+                        'rgba(37, 99, 235, 0.9)',
+                        'rgba(59, 130, 246, 0.7)',
+                        'rgba(147, 197, 253, 0.5)'
+                    ],
+                    hoverOffset: 4
+                }]
+            };
+            const productSegmentCtx = document.getElementById('productSegmentChart').getContext('2d');
+            new Chart(productSegmentCtx, {
+                type: 'doughnut',
+                data: productSegmentData,
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { position: 'bottom' }
+                    }
+                }
+            });
+            
+            const competitors = {
+                global: [
+                    { name: 'Getinge AB', desc: 'Global medical technology leader in surgery, intensive care, and sterilization systems.' },
+                    { name: 'STERIS', desc: 'Leading provider of infection prevention and other procedural products and services.' },
+                    { name: 'Tuttnauer', desc: 'Globally known for a wide variety of sterilization and infection control solutions.' },
+                    { name: 'Belimed Group', desc: 'Major player providing sterile processing solutions for healthcare and life sciences.' },
+                    { name: '3M', desc: 'Diversified technology giant with a significant presence in the laboratory autoclave market.' },
+                    { name: 'Johnson & Johnson', desc: 'Global healthcare company with a broad portfolio including sterilization solutions.' },
+                    { name: 'Thermo Fisher Scientific', desc: 'World leader in scientific research products, including laboratory autoclaves.' },
+                    { name: 'Systec GmbH', desc: 'Specialized global manufacturer of laboratory autoclaves and sterilization systems.' },
+                    { name: 'Priorclave', desc: 'UK-based manufacturer of autoclaves for laboratory and healthcare applications.' },
+                ],
+                canadian: [
+                    { name: 'SciCan', desc: 'Canadian-based infection control specialist and member of Medtech Canada.' },
+                    { name: 'Alpha Scientific', desc: '100% Canadian company supplying and servicing a range of autoclaves and medical equipment.' },
+                    { name: 'SteriPro Canada', desc: 'Key service provider offering on-site and off-site medical device reprocessing in Ontario.' },
+                    { name: 'Nordion', desc: 'Offers gamma sterilization services for medical devices, part of the broader sterilization ecosystem.' },
+                    { name: 'Patterson Industries', desc: 'Designs and manufactures large-scale industrial autoclaves with potential for healthcare applications.' },
+                ]
+            };
+
+            const globalContainer = document.querySelector('#global .grid');
+            const canadianContainer = document.querySelector('#canadian .grid');
+
+            const createCompetitorCard = (competitor) => `
+                <div class="competitor-card p-4">
+                    <h4 class="font-bold text-gray-800">${competitor.name}</h4>
+                    <p class="text-sm text-gray-600 mt-1">${competitor.desc}</p>
+                </div>`;
+            
+            globalContainer.innerHTML = competitors.global.map(createCompetitorCard).join('');
+            canadianContainer.innerHTML = competitors.canadian.map(createCompetitorCard).join('');
+
+            const accordionData = [
+                { title: "Federal: Scientific Research & Experimental Development (SR&ED)", content: "Canada's largest R&D tax incentive program. Provides federal income tax deductions and investment tax credits for eligible R&D work performed in Canada, covering a significant portion of labor, overhead, contractor, and material costs.", type: "Federal" },
+                { title: "Federal: Industrial Research Assistance Program (IRAP)", content: "Provides funding (up to $10M) and advisory services to help small and medium-sized Canadian businesses grow through innovation, development, and commercialization of technology-driven products.", type: "Federal" },
+                { title: "Federal: Strategic Innovation Fund (SIF)", content: "Offers significant funding (min $10M contribution) for large-scale projects that accelerate technology transfer, facilitate firm growth and expansion, or attract major investments to Canada.", type: "Federal" },
+                { title: "Provincial: Advanced Manufacturing and Innovation Competitiveness (AMIC)", content: "An Ontario program offering grants and loans (up to $5M) to support SMEs in advanced manufacturing with capital equipment and technology adoption projects.", type: "Provincial" },
+                { title: "Provincial: Regional Development Funds (EODF & SWODF)", content: "The Eastern and Southwestern Ontario Development Funds provide grants and loans ($500k to $5M) to support business growth, job creation, and regional economic development.", type: "Provincial" },
+                { title: "Provincial: OBIO Capital Access Advisory Program (CAAP)", content: "Specifically supports health science companies with commercialization and technology adoption, providing up to $250,000 in funding.", type: "Provincial" },
+            ];
+            
+            const accordionContainer = document.getElementById('accordion-container');
+            accordionData.forEach(item => {
+                const isFederal = item.type === "Federal";
+                const itemHtml = `
+                    <div class="border border-gray-200 rounded-lg">
+                        <button class="accordion-button w-full flex justify-between items-center text-left p-4">
+                            <span class="font-semibold text-gray-800">${item.title}</span>
+                             <div class="flex items-center">
+                                <span class="text-xs font-bold uppercase mr-3 ${isFederal ? 'text-red-700 bg-red-100' : 'text-blue-700 bg-blue-100'} px-2 py-1 rounded-full">${item.type}</span>
+                                <span class="accordion-icon transform transition-transform duration-300">▼</span>
+                             </div>
+                        </button>
+                        <div class="accordion-content px-4 pb-4">
+                            <p class="text-gray-600">${item.content}</p>
+                        </div>
+                    </div>`;
+                accordionContainer.innerHTML += itemHtml;
+            });
+
+            accordionContainer.addEventListener('click', function(e) {
+                const button = e.target.closest('.accordion-button');
+                if (button) {
+                    const content = button.nextElementSibling;
+                    const icon = button.querySelector('.accordion-icon');
+                    const isOpen = content.style.maxHeight && content.style.maxHeight !== '0px';
+
+                    document.querySelectorAll('.accordion-content').forEach(c => c.style.maxHeight = null);
+                    document.querySelectorAll('.accordion-icon').forEach(i => i.style.transform = 'rotate(0deg)');
+
+                    if (!isOpen) {
+                        content.style.maxHeight = content.scrollHeight + "px";
+                        icon.style.transform = 'rotate(180deg)';
+                    }
+                }
+            });
+
+            function setupTabs(containerId) {
+                const container = document.getElementById(containerId);
+                if(!container) return;
+                const tabs = container.querySelectorAll('.tab');
+                const contentClass = containerId.includes('competitor') ? '.competitor-content' : '.export-content';
+                const tabContents = container.parentElement.querySelectorAll(contentClass);
+
+                tabs.forEach(tab => {
+                    tab.addEventListener('click', () => {
+                        tabs.forEach(t => t.classList.remove('active'));
+                        tab.classList.add('active');
+
+                        tabContents.forEach(content => {
+                            content.classList.add('hidden');
+                        });
+                        
+                        const targetId = containerId.includes('competitor') ? tab.dataset.target : `${tab.dataset.target}-content`;
+                        document.getElementById(targetId).classList.remove('hidden');
+                    });
+                });
+            }
+
+            setupTabs('export-tabs-container');
+            setupTabs('competitor-tabs-container');
+
+            const mobileMenuButton = document.getElementById('mobile-menu-button');
+            const mobileMenu = document.getElementById('mobile-menu');
+            const hamburgerIcon = document.getElementById('hamburger-icon').children;
+            mobileMenuButton.addEventListener('click', () => {
+                const isOpen = !mobileMenu.classList.toggle('hidden');
+                hamburgerIcon[0].classList.toggle('rotate-45', isOpen);
+                hamburgerIcon[0].classList.toggle('translate-y-2', isOpen);
+                hamburgerIcon[1].classList.toggle('opacity-0', isOpen);
+                hamburgerIcon[2].classList.toggle('-rotate-45', isOpen);
+                hamburgerIcon[2].classList.toggle('-translate-y-2', isOpen);
+            });
+
+            const navLinks = document.querySelectorAll('#nav-menu a, #mobile-menu a');
+            const sections = document.querySelectorAll('main section');
+
+            navLinks.forEach(link => {
+                link.addEventListener('click', () => {
+                   if (window.innerWidth < 768) {
+                       mobileMenu.classList.add('hidden');
+                       const isOpen = false;
+                       hamburgerIcon[0].classList.toggle('rotate-45', isOpen);
+                       hamburgerIcon[0].classList.toggle('translate-y-2', isOpen);
+                       hamburgerIcon[1].classList.toggle('opacity-0', isOpen);
+                       hamburgerIcon[2].classList.toggle('-rotate-45', isOpen);
+                       hamburgerIcon[2].classList.toggle('-translate-y-2', isOpen);
+                   }
+                });
+            });
+            
+            window.addEventListener('scroll', () => {
+                let current = '';
+                sections.forEach(section => {
+                    const sectionTop = section.offsetTop;
+                    if (pageYOffset >= sectionTop - (document.getElementById('header').offsetHeight + 20)) {
+                        current = section.getAttribute('id');
+                    }
+                });
+                
+                navLinks.forEach(link => {
+                    link.classList.remove('active');
+                    if (link.getAttribute('href').includes(current)) {
+                        link.classList.add('active');
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>
